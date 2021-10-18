@@ -16,6 +16,7 @@ class Player:
         self.image = pygame.image.load ("graphics/player.png")
         self.image = pygame.transform.scale(self.image, (self.settings.player_size, self.settings.player_size))
         self.rect = self.image.get_rect()
+        self.collision_rect = self.image.get_rect()
 
         self.rect.topleft = self.screen_rect.topleft
         self.rect.x += 10
@@ -43,10 +44,15 @@ class Player:
         self.colliding_up = False
         self.colliding_down = False
 
+        self.collision_rect.center = self.rect.center 
+
         if self.moving_right and self.rect.right < self.screen_rect.right:
 
+            self.collision_rect.center = self.rect.center 
+            self.collision_rect.x += self.settings.player_speed
+
             for line_rect in self.gg_game.maze_elements:
-                if line_rect.rect.collidepoint((self.rect.center[0] + (self.settings.player_size // 2) + self.settings.player_speed, self.rect.center[1])):
+                if line_rect.rect.colliderect(self.collision_rect):
                     self.colliding_right = True
 
             if not self.colliding_right:
@@ -56,8 +62,11 @@ class Player:
 
         if self.moving_left and self.rect.left > 0:
 
+            self.collision_rect.center = self.rect.center 
+            self.collision_rect.x -= self.settings.player_speed
+
             for line_rect in self.gg_game.maze_elements:
-                if line_rect.rect.collidepoint((self.rect.center[0] - (self.settings.player_size // 2) - self.settings.player_speed, self.rect.center[1])):
+                if line_rect.rect.colliderect(self.collision_rect):
                     self.colliding_left = True
             
             if not self.colliding_left:
@@ -67,8 +76,11 @@ class Player:
 
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
 
+            self.collision_rect.center = self.rect.center 
+            self.collision_rect.y += self.settings.player_speed
+
             for line_rect in self.gg_game.maze_elements:
-                if line_rect.rect.collidepoint((self.rect.center[0], self.rect.center[1] + (self.settings.player_size // 2) + self.settings.player_speed)):
+                if line_rect.rect.colliderect(self.collision_rect):
                     self.colliding_down = True
 
             if not self.colliding_down:
@@ -78,8 +90,11 @@ class Player:
 
         if self.moving_up and self.rect.top > 0:
 
+            self.collision_rect.center = self.rect.center 
+            self.collision_rect.y -= self.settings.player_speed
+
             for line_rect in self.gg_game.maze_elements:
-                if line_rect.rect.collidepoint((self.rect.center[0], self.rect.center[1] - (self.settings.player_size // 2) - self.settings.player_speed)):
+                if line_rect.rect.colliderect(self.collision_rect):
                     self.colliding_up = True
 
             if not self.colliding_up:
