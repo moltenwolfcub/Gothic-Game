@@ -26,7 +26,7 @@ class GothicGame:
         self.player = Player(self)
         self.maze_elements = pygame.sprite.Group()
 
-        self.line_list = [
+        self.maze_line_shapes = [
             (110, 110, 500, 10),
             (110, 110, 10, 400),
             (110, 620, 10, 240),
@@ -55,7 +55,7 @@ class GothicGame:
 
     def create_maze(self):
         """Draw the maze rects"""
-        for shape in self.line_list:
+        for shape in self.maze_line_shapes:
             element = MazeElement(self, shape)
             self.maze_elements.add(element)
 
