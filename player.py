@@ -30,61 +30,60 @@ class Player:
         self.moving_up = False
         self.moving_down = False
 
-        self.last_moved_direction = "up"
+        self.colliding_right = False
+        self.colliding_left = False
+        self.colliding_up = False
+        self.colliding_down = False
 
     def update(self):
         """Update the ship's position based on the movement flags"""
 
+        self.colliding_right = False
+        self.colliding_left = False
+        self.colliding_up = False
+        self.colliding_down = False
+
         if self.moving_right and self.rect.right < self.screen_rect.right:
 
-            self.last_moved_direction = "right"
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.collidepoint((self.rect.center[0] + (self.settings.player_size // 2) + self.settings.player_speed, self.rect.center[1])):
+                    self.colliding_right = True
 
-            if not pygame.sprite.spritecollideany(self, self.gg_game.maze_elements):
+            if not self.colliding_right:
                 self.x += self.settings.player_speed
-            else:
-                self.x -= self.settings.player_speed
+
+
 
         if self.moving_left and self.rect.left > 0:
 
-            self.last_moved_direction = "left"
-
-            if not pygame.sprite.spritecollideany(self, self.gg_game.maze_elements):
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.collidepoint((self.rect.center[0] - (self.settings.player_size // 2) - self.settings.player_speed, self.rect.center[1])):
+                    self.colliding_left = True
+            
+            if not self.colliding_left:
                 self.x -= self.settings.player_speed
-            else:
-                self.x += self.settings.player_speed
+
+
 
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
 
-            self.last_moved_direction = "down"
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.collidepoint((self.rect.center[0], self.rect.center[1] + (self.settings.player_size // 2) + self.settings.player_speed)):
+                    self.colliding_down = True
 
-            if not pygame.sprite.spritecollideany(self, self.gg_game.maze_elements):
+            if not self.colliding_down:
                 self.y += self.settings.player_speed
-            else:
-                self.y -= self.settings.player_speed
+
+
 
         if self.moving_up and self.rect.top > 0:
 
-            self.last_moved_direction = "up"
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.collidepoint((self.rect.center[0], self.rect.center[1] - (self.settings.player_size // 2) - self.settings.player_speed)):
+                    self.colliding_up = True
 
-            if not pygame.sprite.spritecollideany(self, self.gg_game.maze_elements):
+            if not self.colliding_up:
                 self.y -= self.settings.player_speed
-            else:
-                self.y += self.settings.player_speed
-        
-        if pygame.sprite.spritecollideany(self, self.gg_game.maze_elements):
-            if self.last_moved_direction == "up":
-                self.y += self.settings.player_speed
-            elif self.last_moved_direction == "down":
-                self.y -= self.settings.player_speed
-            elif self.last_moved_direction == "left":
-                self.x += self.settings.player_speed
-            elif self.last_moved_direction == "right":
-                self.x -= self.settings.player_speed
-        
-        if self.x < 0:
-            self.x = 0
-        if self.y > self.settings.screen_height - 75:
-            self.y = self.settings.screen_height - 75
 
         
         self.rect.x = self.x
