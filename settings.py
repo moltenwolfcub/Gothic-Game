@@ -11,3 +11,7 @@ class Settings:
         #player settings
         self.player_speed = 5
         self.player_size = 75
+
+        #item settings
+
+        self.item_size = 60

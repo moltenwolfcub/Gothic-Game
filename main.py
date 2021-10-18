@@ -3,6 +3,7 @@ import pygame, sys
 from settings import Settings
 from player import Player
 from maze import MazeElement
+from item import Item
 
 class GothicGame:
     """Overall class to manage game assets and behaviour"""
@@ -24,6 +25,7 @@ class GothicGame:
         pygame.display.set_caption("Gothic Game")
 
         self.player = Player(self)
+        self.item = Item(self)
         self.maze_elements = pygame.sprite.Group()
 
         self.maze_line_shapes = [
@@ -118,21 +120,19 @@ class GothicGame:
 
         self.screen.blit(self.bg_image, (0, 0))
         self.player.blitme()
+        self.item.blitme()
 
         self.maze_elements.draw(self.screen)
         
         pygame.display.flip()
 
-    def check_collisions(self):  
-        pass
 
     def run_game(self):
         """Start the main loop for the game"""
         while True:
-            self.check_collisions()
-
             self._check_events()
             self.player.update()
+            self.item.update()
 
             self._update_screen()
 
