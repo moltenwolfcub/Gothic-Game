@@ -1,5 +1,6 @@
-import pygame
+import pygame, random, sys
 from pygame.sprite import Sprite
+
 
 class Enemy(Sprite):
     """A class to represent a singular rat"""
@@ -16,6 +17,8 @@ class Enemy(Sprite):
         self.image = pygame.transform.scale(self.image, (self.settings.enemy_size, self.settings.enemy_size))
         self.rect = self.image.get_rect()
 
+        self.collision_rect = self.image.get_rect()
+
         self.rect.x = self.settings.screen_width - self.settings.enemy_size - 10
         self.rect.y = self.settings.screen_height - self.settings.enemy_size - 10
 
@@ -26,37 +29,130 @@ class Enemy(Sprite):
     
     def update(self):
         """Move the enemy"""
-        self.image = pygame.image.load("graphics/enemy.png")
-        self.image = pygame.transform.scale(self.image, (self.settings.enemy_size, self.settings.enemy_size))
+        if not self.check_edges():
+            self.image = pygame.image.load("graphics/enemy.png")
+            self.image = pygame.transform.scale(self.image, (self.settings.enemy_size, self.settings.enemy_size))
 
-        if self.direction == "left":
+            if self.direction == "left":
 
-            self.image = pygame.transform.rotate(self.image, 0)
-            self.image = pygame.transform.flip(self.image, False, False)
+                self.image = pygame.transform.rotate(self.image, 0)
+                self.image = pygame.transform.flip(self.image, False, False)
 
-            self.x -= self.settings.enemy_speed
-            self.rect.x = self.x
+                self.x -= self.settings.enemy_speed
+                self.rect.x = self.x
+
+            if self.direction == "right":
+
+                self.image = pygame.transform.rotate(self.image, 0)
+                self.image = pygame.transform.flip(self.image, True, False)
+
+                self.x += self.settings.enemy_speed
+                self.rect.x = self.x
+
+            if self.direction == "up":
+
+                self.image = pygame.transform.rotate(self.image, -90)
+                self.image = pygame.transform.flip(self.image, False, False)
+
+                self.y -= self.settings.enemy_speed
+                self.rect.y = self.y
+
+            if self.direction == "down":
+
+                self.image = pygame.transform.rotate(self.image, 90)
+                self.image = pygame.transform.flip(self.image, False, False)
+
+                self.y += self.settings.enemy_speed
+                self.rect.y = self.y
+        
+        else:
+            self.change_direction()
+
+    def change_direction(self):
+        """50/50 chance of turning left or right"""
+        if self.direction == "right":
+            value = random.choice([0, 1])
+            if value == 0:
+                self.direction = "up"
+            elif value == 1:
+                self.direction = "down"
+            else:
+                print("Programmer error \n exiting...")
+                sys.exit()
+
+        elif self.direction == "left":
+            value = random.choice([0, 1])
+            if value == 0:
+                self.direction = "down"
+            elif value == 1:
+                self.direction = "up"
+            else:
+                print("Programmer error \n exiting...")
+                sys.exit()
+
+        elif self.direction == "up":
+            value = random.choice([0, 1])
+            if value == 0:
+                self.direction = "left"
+            elif value == 1:
+                self.direction = "right"
+            else:
+                print("Programmer error \n exiting...")
+                sys.exit()
+                
+        elif self.direction == "down":
+            value = random.choice([0, 1])
+            if value == 0:
+                self.direction = "right"
+            elif value == 1:
+                self.direction = "left"
+            else:
+                print("Programmer error \n exiting...")
+                sys.exit()
+                
+
+    def check_edges(self) -> bool:
+        """Return True if enemy is at the edge of the screen or hitting a wall"""
+        screen_rect = self.screen.get_rect()
+
+        self.collision_rect.center = self.rect.center 
 
         if self.direction == "right":
+            self.collision_rect.x += self.settings.enemy_speed
 
-            self.image = pygame.transform.rotate(self.image, 0)
-            self.image = pygame.transform.flip(self.image, True, False)
+            if self.collision_rect.right > screen_rect.right:
+                return True
 
-            self.x += self.settings.enemy_speed
-            self.rect.x = self.x
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.colliderect(self.collision_rect):
+                    return True
+        
+        elif self.direction == "left":
+            self.collision_rect.x -= self.settings.enemy_speed
 
-        if self.direction == "up":
+            if self.collision_rect.left < 0:
+                return True
 
-            self.image = pygame.transform.rotate(self.image, -90)
-            self.image = pygame.transform.flip(self.image, False, False)
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.colliderect(self.collision_rect):
+                    return True
+        
+        elif self.direction == "up":
+            self.collision_rect.y -= self.settings.enemy_speed
 
-            self.y -= self.settings.enemy_speed
-            self.rect.y = self.y
+            if self.collision_rect.top < 0:
+                return True
 
-        if self.direction == "down":
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.colliderect(self.collision_rect):
+                    return True
+        
+        elif self.direction == "down":
+            self.collision_rect.y += self.settings.enemy_speed
 
-            self.image = pygame.transform.rotate(self.image, 90)
-            self.image = pygame.transform.flip(self.image, False, False)
+            if self.collision_rect.top > screen_rect.top:
+                return True
 
-            self.y += self.settings.enemy_speed
-            self.rect.y = self.y
+            for line_rect in self.gg_game.maze_elements:
+                if line_rect.rect.colliderect(self.collision_rect):
+                    return True

@@ -13,8 +13,8 @@ class Settings:
         self.player_size = 75
 
         #item settings
-        self.item_size = 75
+        self.item_size = 80
 
         #enemy size
-        self.enemy_size = 75
+        self.enemy_size = 100
         self.enemy_speed = 5.0
