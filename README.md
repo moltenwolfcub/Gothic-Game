@@ -1,4 +1,4 @@
-# Gothic Game
+# Rat's Revenge
 
 A maze game inspired by the gothic genre.
 

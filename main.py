@@ -4,6 +4,7 @@ from settings import Settings
 from player import Player
 from maze import MazeElement
 from item import Item
+from enemy import Enemy
 
 class GothicGame:
     """Overall class to manage game assets and behaviour"""
@@ -53,6 +54,11 @@ class GothicGame:
         ]
 
         self.create_maze()
+
+        self.enemies = pygame.sprite.Group()
+
+        enemy = Enemy(self)
+        self.enemies.add(enemy)
 
 
     def create_maze(self):
@@ -123,14 +129,19 @@ class GothicGame:
         self.item.blitme()
 
         self.maze_elements.draw(self.screen)
+        self.enemies.draw(self.screen)
         
         pygame.display.flip()
 
+    def update_enemies(self):
+        """Update the positions of the enemies"""
+        self.enemies.update()
 
     def run_game(self):
         """Start the main loop for the game"""
         while True:
             self._check_events()
+            self.update_enemies()
             self.player.update()
             self.item.update()
 

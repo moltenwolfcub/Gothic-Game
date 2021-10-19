@@ -9,9 +9,12 @@ class Settings:
         self.screen_height = 0
 
         #player settings
-        self.player_speed = 5
+        self.player_speed = 5.0
         self.player_size = 75
 
         #item settings
+        self.item_size = 75
 
-        self.item_size = 60
+        #enemy size
+        self.enemy_size = 75
+        self.enemy_speed = 5.0
