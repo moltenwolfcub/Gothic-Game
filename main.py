@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 
 from settings import Settings
 from player import Player
@@ -134,8 +134,14 @@ class GothicGame:
         pygame.display.flip()
 
     def update_enemies(self):
-        """Update the positions of the enemies"""
+        """Update the positions of the enemies and possibly duplicate"""
         self.enemies.update()
+
+        if random.randint(1, 100) == 1:
+
+            enemy = Enemy(self)
+            self.enemies.add(enemy)
+
 
     def run_game(self):
         """Start the main loop for the game"""
