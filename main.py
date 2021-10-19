@@ -22,7 +22,7 @@ class GothicGame:
         self.bg_image = pygame.image.load(self.bacground_filename)
         self.bg_image = pygame.transform.scale(self.bg_image, (self.settings.screen_width, self.settings.screen_height))
 
-        pygame.display.set_caption("Gothic Game")
+        pygame.display.set_caption("Rat's Revenge")
 
         self.player = Player(self)
         self.item = Item(self)
