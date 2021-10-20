@@ -5,7 +5,7 @@ from pygame.sprite import Sprite
 class Enemy(Sprite):
     """A class to represent a singular rat"""
 
-    def __init__(self, gg_game):
+    def __init__(self, gg_game, start_pos = ""):
         """Initialize the enemy and its starting pos"""
         super().__init__()
 
@@ -19,8 +19,13 @@ class Enemy(Sprite):
 
         self.collision_rect = self.image.get_rect()
 
-        self.rect.x = self.settings.screen_width - self.settings.enemy_size - 10
-        self.rect.y = self.settings.screen_height - self.settings.enemy_size - 10
+        if not start_pos:
+            self.rect.x = self.settings.screen_width - self.settings.enemy_size - 10
+            self.rect.y = self.settings.screen_height - self.settings.enemy_size - 10
+        
+        elif start_pos:
+            self.rect.x = start_pos[0]
+            self.rect.y = start_pos[1]
 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -67,6 +72,12 @@ class Enemy(Sprite):
         
         else:
             self.change_direction()
+        
+
+        if random.randint(1, 10000) == 1:
+
+            enemy = Enemy(self.gg_game, (self.rect.x, self.rect.y))
+            self.gg_game.enemies.add(enemy)
 
     def change_direction(self):
         """50/50 chance of turning left or right"""

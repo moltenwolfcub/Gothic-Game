@@ -137,11 +137,6 @@ class GothicGame:
         """Update the positions of the enemies and possibly duplicate"""
         self.enemies.update()
 
-        if random.randint(1, 100) == 1:
-
-            enemy = Enemy(self)
-            self.enemies.add(enemy)
-
 
     def run_game(self):
         """Start the main loop for the game"""
