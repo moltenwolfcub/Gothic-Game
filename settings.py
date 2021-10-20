@@ -21,5 +21,5 @@ class Settings:
         self.enemy_speed = 5.0
 
         #button settings
-        self.button_color = (155, 0, 0)
+        self.button_color = (255, 0, 0)
         self.button_text_color = (255, 255, 255)
