@@ -1,6 +1,7 @@
 import pygame, sys, random
 
 from settings import Settings
+from game_stats import GameStats
 from player import Player
 from maze import MazeElement
 from item import Item
@@ -24,6 +25,8 @@ class GothicGame:
         self.bg_image = pygame.transform.scale(self.bg_image, (self.settings.screen_width, self.settings.screen_height))
 
         pygame.display.set_caption("Rat's Revenge")
+
+        self.stats = GameStats(self)
 
         self.player = Player(self)
         self.item = Item(self)
@@ -125,11 +128,12 @@ class GothicGame:
         """Update the images on the screen and flip to a new screen."""
 
         self.screen.blit(self.bg_image, (0, 0))
-        self.player.blitme()
         self.item.blitme()
 
         self.maze_elements.draw(self.screen)
         self.enemies.draw(self.screen)
+        
+        self.player.blitme()
         
         pygame.display.flip()
 
@@ -137,14 +141,26 @@ class GothicGame:
         """Update the positions of the enemies"""
         self.enemies.update()
 
+        if pygame.sprite.spritecollideany(self.player, self.enemies):
+            self.player_hit()
+
+    def player_hit(self):
+        """Respond to player_enemy collisions"""
+
+        if self.stats.health > 0:
+            self.stats.health -= 1
+        
+        else:
+            self.stats.game_active = False
 
     def run_game(self):
         """Start the main loop for the game"""
         while True:
             self._check_events()
-            self.update_enemies()
-            self.player.update()
-            self.item.update()
+            if self.stats.game_active:
+                self.update_enemies()
+                self.player.update()
+                self.item.update()
 
             self._update_screen()
 

@@ -11,6 +11,7 @@ class Settings:
         #player settings
         self.player_speed = 5.0
         self.player_size = 75
+        self.max_health = 100
 
         #item settings
         self.item_size = 80
