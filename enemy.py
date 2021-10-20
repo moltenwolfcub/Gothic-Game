@@ -80,43 +80,51 @@ class Enemy(Sprite):
             self.gg_game.enemies.add(enemy)
 
     def change_direction(self):
-        """50/50 chance of turning left or right"""
+        """1/3 chance of turning left ,right or turning back"""
         if self.direction == "right":
-            value = random.choice([0, 1])
+            value = random.choice([0, 2])
             if value == 0:
                 self.direction = "up"
             elif value == 1:
                 self.direction = "down"
+            elif value == 2:
+                self.direction = "left"
             else:
                 print("Programmer error \n exiting...")
                 sys.exit()
 
         elif self.direction == "left":
-            value = random.choice([0, 1])
+            value = random.choice([0, 2])
             if value == 0:
                 self.direction = "down"
             elif value == 1:
                 self.direction = "up"
+            elif value == 2:
+                self.direction = "right"
             else:
                 print("Programmer error \n exiting...")
                 sys.exit()
 
         elif self.direction == "up":
-            value = random.choice([0, 1])
+            value = random.choice([0, 2])
             if value == 0:
                 self.direction = "left"
             elif value == 1:
                 self.direction = "right"
+            elif value == 2:
+                self.direction = "down"
             else:
                 print("Programmer error \n exiting...")
                 sys.exit()
                 
         elif self.direction == "down":
-            value = random.choice([0, 1])
+            value = random.choice([0, 2])
             if value == 0:
                 self.direction = "right"
             elif value == 1:
                 self.direction = "left"
+            elif value == 2:
+                self.direction = "up"
             else:
                 print("Programmer error \n exiting...")
                 sys.exit()

@@ -134,7 +134,7 @@ class GothicGame:
         pygame.display.flip()
 
     def update_enemies(self):
-        """Update the positions of the enemies and possibly duplicate"""
+        """Update the positions of the enemies"""
         self.enemies.update()
 
 
