@@ -2,6 +2,7 @@ import pygame, sys, random
 
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from player import Player
 from maze import MazeElement
@@ -28,6 +29,7 @@ class GothicGame:
         pygame.display.set_caption("Rat's Revenge")
 
         self.stats = GameStats(self)
+        self.scoreboard = Scoreboard(self)
 
         self.player = Player(self)
         self.item = Item(self)
@@ -139,8 +141,10 @@ class GothicGame:
         if self.play_button.rect.collidepoint(mouse_pos):
             self.play_button.button_color = (155, 0, 0)
             if self.mouse_down and not self.stats.game_active:
+                self.settings.initialize_dynamic_settings()
                 self.stats.reset_stats()
                 self.stats.game_active = True
+                self.scoreboard.prep_score()
 
                 self.enemies.empty()
                 enemy = Enemy(self)
@@ -164,6 +168,8 @@ class GothicGame:
         self.enemies.draw(self.screen)
         self.player.blitme()
 
+        self.scoreboard.show_score()
+
         if not self.stats.game_active:
             self.play_button.draw_button()
 
@@ -186,6 +192,12 @@ class GothicGame:
         else:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
+
+    def increase_score(self):
+        """Increase score"""
+        self.stats.score += self.settings.item_points
+        self.scoreboard.prep_score()
+
 
     def run_game(self):
         """Start the main loop for the game"""

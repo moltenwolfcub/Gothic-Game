@@ -23,7 +23,7 @@ class Item:
     def update(self):
         """Check if touching player"""
         if self.rect.colliderect(self.gg_game.player.rect):
-            #increase score
+            self.gg_game.increase_score()
             self.move()
     
     def move(self):

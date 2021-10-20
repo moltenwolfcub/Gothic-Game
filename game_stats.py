@@ -12,3 +12,4 @@ class GameStats:
     def reset_stats(self):
         """Initialize variable statistics"""
         self.health = self.settings.max_health
+        self.score = 0

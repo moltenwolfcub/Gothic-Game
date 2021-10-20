@@ -79,6 +79,8 @@ class Enemy(Sprite):
             enemy = Enemy(self.gg_game, (self.rect.x, self.rect.y))
             self.gg_game.enemies.add(enemy)
 
+            self.settings.increase_speed()
+
     def change_direction(self):
         """1/3 chance of turning left ,right or turning back"""
         if self.direction == "right":
