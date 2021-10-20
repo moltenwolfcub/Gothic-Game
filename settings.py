@@ -16,6 +16,10 @@ class Settings:
         #item settings
         self.item_size = 80
 
-        #enemy size
+        #enemy settings
         self.enemy_size = 100
         self.enemy_speed = 5.0
+
+        #button settings
+        self.button_color = (155, 0, 0)
+        self.button_text_color = (255, 255, 255)

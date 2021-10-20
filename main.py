@@ -2,6 +2,7 @@ import pygame, sys, random
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from player import Player
 from maze import MazeElement
 from item import Item
@@ -63,6 +64,10 @@ class GothicGame:
         enemy = Enemy(self)
         self.enemies.add(enemy)
 
+        self.play_button = Button(self, "Play")
+
+        self.mouse_down = False
+
 
     def create_maze(self):
         """Draw the maze rects"""
@@ -121,8 +126,33 @@ class GothicGame:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.mouse_down = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.mouse_down = False
+
             #elif event.type == pygame.VIDEORESIZE:
             #    self._resize_screen(event)
+
+    def check_mouse(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.play_button.button_color = (255, 0, 0)
+            if self.mouse_down and not self.stats.game_active:
+                self.stats.reset_stats()
+                self.stats.game_active = True
+
+                self.enemies.empty()
+                enemy = Enemy(self)
+                self.enemies.add(enemy)
+
+                self.player.reset_pos()
+
+
+                pygame.mouse.set_visible(False)
+        
+        else:
+            self.play_button.button_color = self.settings.button_color
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
@@ -132,8 +162,11 @@ class GothicGame:
 
         self.maze_elements.draw(self.screen)
         self.enemies.draw(self.screen)
-        
         self.player.blitme()
+
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+
         
         pygame.display.flip()
 
@@ -152,11 +185,13 @@ class GothicGame:
         
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def run_game(self):
         """Start the main loop for the game"""
         while True:
             self._check_events()
+            self.check_mouse()
             if self.stats.game_active:
                 self.update_enemies()
                 self.player.update()

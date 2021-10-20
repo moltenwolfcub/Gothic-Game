@@ -108,6 +108,14 @@ class Player:
         """Draw the ship at its current location"""
         self.screen.blit(self.image, self.rect)
 
+    def reset_pos(self):
+        self.rect.topleft = self.screen_rect.topleft
+        self.rect.x += 10
+        self.rect.y += 10
+
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+
     def resize_window(self, event, old_screen_size): # dosen't work so unused
         """Moves image to compensate resizing the window"""
         center_pos = (self.rect.x, self.rect.y)
