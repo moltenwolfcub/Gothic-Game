@@ -185,18 +185,15 @@ class GothicGame:
 
     def player_hit(self):
         """Respond to player_enemy collisions"""
-
-        if self.stats.health > 0:
-            self.stats.health -= 1
         
-        else:
-            self.stats.game_active = False
-            pygame.mouse.set_visible(True)
+        self.stats.game_active = False
+        pygame.mouse.set_visible(True)
 
     def increase_score(self):
         """Increase score"""
         self.stats.score += self.settings.item_points
         self.scoreboard.prep_score()
+        self.scoreboard.check_high_score()
 
 
     def run_game(self):
