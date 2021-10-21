@@ -114,7 +114,19 @@ class GothicGame:
     def _check_keydown_events(self, event):
         """Respond to key presses."""
         if event.key == pygame.K_ESCAPE:
-            sys.exit()
+            if self.stats.game_active:
+                self.player_hit()
+            elif self.stats.in_lobby:
+                sys.exit()
+            elif self.stats.in_stat_reset_check:
+                self.stats.in_stat_reset_check = False
+                self.stats.in_stats = True
+            else:
+                self.stats.in_stats = False
+                self.stats.in_credits = False
+
+                self.stats.in_lobby = True
+
         elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.player.moving_right = True
         elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -180,6 +192,17 @@ class GothicGame:
             self.play_button.alternate_color = False
 
 
+        if self.credits_button.rect.collidepoint(mouse_pos):
+            self.credits_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                self.stats.in_lobby = False
+                self.stats.in_stats = False
+                self.stats.in_credits = True
+
+        else:
+            self.credits_button.alternate_color = False
+
+    
         if self.stats_button.rect.collidepoint(mouse_pos):
             self.stats_button.alternate_color = True
             if self.mouse_down and not self.stats.game_active:
@@ -210,16 +233,6 @@ class GothicGame:
             self.stats_back_button.alternate_color = False
         
 
-        if self.credits_button.rect.collidepoint(mouse_pos):
-            self.credits_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
-                #clickcode
-                pass
-
-        else:
-            self.credits_button.alternate_color = False
-
-
         if self.exit_button.rect.collidepoint(mouse_pos):
             self.exit_button.alternate_color = True
             if self.mouse_down and not self.stats.game_active:
@@ -249,7 +262,6 @@ class GothicGame:
 
         else:
             self.reset_deny_button.alternate_color = False
-
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
@@ -299,6 +311,12 @@ class GothicGame:
 
                 self.reset_confirm_button.draw_button()
                 self.reset_deny_button.draw_button()
+            
+            elif self.stats.in_credits:
+
+                self.proggrammer_credt_text = Text(self, "Lead Programmer: Oliver", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 50), True)
+                self.artist_credt_text = Text(self, "Lead Artist: Livvy", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 25), True)
+                self.music_credt_text = Text(self, "Lead Sound Artist: Bernard", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 0), True)
 
         
         pygame.display.flip()
