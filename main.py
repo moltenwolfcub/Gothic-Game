@@ -30,6 +30,10 @@ class GothicGame:
         self.lobby_bg_image = pygame.image.load(self.lobby_bacground_filename)
         self.lobby_bg_image = pygame.transform.scale(self.lobby_bg_image, (self.settings.screen_width, self.settings.screen_height))
 
+        self.logo_filename = "graphics/ui/logo.png"
+        self.logo_image = pygame.image.load(self.logo_filename)
+        self.logo_image = pygame.transform.scale(self.logo_image, (500,500))
+
         pygame.display.set_caption("Rat's Revenge")
 
         self.stats = GameStats(self)
@@ -70,8 +74,8 @@ class GothicGame:
         enemy = Enemy(self)
         self.enemies.add(enemy)
 
-        self.play_button = Button(self, "Play")
-        self.stats_button = Button(self, "Statistics",(self.settings.screen_width//2, self.settings.screen_height//2 + 75), (300, 75))
+        self.play_button = Button(self, "Play", (self.settings.screen_width//2, self.settings.screen_height//2 - 100))
+        self.stats_button = Button(self, "Statistics",(self.settings.screen_width//2, self.settings.screen_height//2 - 25), (300, 75))
 
         self.mouse_down = False
 
@@ -185,6 +189,7 @@ class GothicGame:
 
         if not self.stats.game_active:
             self.screen.blit(self.lobby_bg_image, (0, 0))
+            self.screen.blit(self.logo_image, (self.settings.screen_width//2-250,-20))
 
             self.play_button.draw_button()
             self.stats_button.draw_button()
