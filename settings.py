@@ -25,6 +25,9 @@ class Settings:
         self.speedup_scale = 1.1
         self.score_scale = 1.5
 
+        #statistic page settings
+        self.stats_text_color = (255, 255, 255)
+
         self.initialize_dynamic_settings()
 
     def initialize_dynamic_settings(self):

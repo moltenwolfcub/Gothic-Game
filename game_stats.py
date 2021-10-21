@@ -8,9 +8,15 @@ class GameStats:
         self.reset_stats()
 
         self.game_active = False
+        self.in_lobby = True
+        self.in_stats = False
 
         self.high_score = 0
 
+        self.total_items_collected = 0
+
+    def reset_total_stats(self):
+        """Reset the statistics stored cross game"""
         self.total_items_collected = 0
 
     def reset_stats(self):

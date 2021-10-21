@@ -1,9 +1,11 @@
-import pygame, sys, random
+import pygame, sys
 
 from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from button import Button
+from text import Text
+
 from player import Player
 from maze import MazeElement
 from item import Item
@@ -76,6 +78,8 @@ class GothicGame:
 
         self.play_button = Button(self, "Play", (self.settings.screen_width//2, self.settings.screen_height//2 - 100))
         self.stats_button = Button(self, "Statistics",(self.settings.screen_width//2, self.settings.screen_height//2 - 25), (300, 75))
+        
+        self.stats_back_button = Button(self, "Back", (self.settings.screen_width//2-100 ,self.settings.screen_height-75))
 
         self.mouse_down = False
 
@@ -164,16 +168,28 @@ class GothicGame:
 
                 pygame.mouse.set_visible(False)
 
-        if not self.play_button.rect.collidepoint(mouse_pos):
+        else:
             self.play_button.alternate_color = False
+
 
         if self.stats_button.rect.collidepoint(mouse_pos):
             self.stats_button.alternate_color = True
             if self.mouse_down and not self.stats.game_active:
-                pass
+                self.stats.in_lobby = False
+                self.stats.in_stats = True
 
-        if not self.stats_button.rect.collidepoint(mouse_pos):
+        else:
             self.stats_button.alternate_color = False
+
+
+        if self.stats_back_button.rect.collidepoint(mouse_pos):
+            self.stats_back_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                self.stats.in_stats = False
+                self.stats.in_lobby = True
+
+        else:
+            self.stats_back_button.alternate_color = False
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
@@ -191,8 +207,20 @@ class GothicGame:
             self.screen.blit(self.lobby_bg_image, (0, 0))
             self.screen.blit(self.logo_image, (self.settings.screen_width//2-250,-20))
 
-            self.play_button.draw_button()
-            self.stats_button.draw_button()
+            if self.stats.in_lobby:
+                self.play_button.draw_button()
+                self.stats_button.draw_button()
+            
+            elif self.stats.in_stats:
+
+                self.total_items_text = Text(self, "Total items Collected:", (self.settings.screen_width//2 - 400, 400))
+                self.total_items_value = Text(self, str(self.stats.total_items_collected), (self.settings.screen_width//2 + 360, 400))
+
+
+                self.total_items_text.draw_text()
+                self.total_items_value.draw_text()
+
+                self.stats_back_button.draw_button()
 
         
         pygame.display.flip()
