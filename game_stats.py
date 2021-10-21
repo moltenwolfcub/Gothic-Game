@@ -10,6 +10,7 @@ class GameStats:
         self.game_active = False
         self.in_lobby = True
         self.in_stats = False
+        self.in_stat_reset_check = False
 
         self.high_score = 0
 

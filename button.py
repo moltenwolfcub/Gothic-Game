@@ -2,7 +2,7 @@ import pygame
 
 class Button:
 
-    def __init__(self, gg_game, msg, pos = "", size =(200, 75), font_size = 48) -> None:
+    def __init__(self, gg_game, msg, pos = "", size =(180, 75), font_size = 48) -> None:
         """Initialize button attributes"""
 
         self.msg = msg

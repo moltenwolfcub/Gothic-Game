@@ -78,8 +78,11 @@ class GothicGame:
 
         self.play_button = Button(self, "Play", (self.settings.screen_width//2, self.settings.screen_height//2 - 100))
         self.stats_button = Button(self, "Statistics",(self.settings.screen_width//2, self.settings.screen_height//2 - 25), (300, 75))
-        
-        self.stats_back_button = Button(self, "Back", (self.settings.screen_width//2-100 ,self.settings.screen_height-75))
+        self.credits_button = Button(self, "Credits", (self.settings.screen_width//2, self.settings.screen_height//2 + 50), (250, 75))
+        self.exit_button = Button(self, "Exit", (self.settings.screen_width//2, self.settings.screen_height//2 + 125))
+
+        self.stats_back_button = Button(self, "Back", (self.settings.screen_width//2-170 ,self.settings.screen_height-75), (200, 75))
+        self.stats_reset_button = Button(self, "Reset Statistics", (self.settings.screen_width//2 + 170 ,self.settings.screen_height-75), (480, 75))
 
         self.mouse_down = False
 
@@ -133,7 +136,7 @@ class GothicGame:
         """Respond to keypresses and mouse events"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                self.exit_game()
 
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -190,6 +193,25 @@ class GothicGame:
 
         else:
             self.stats_back_button.alternate_color = False
+        
+
+        if self.credits_button.rect.collidepoint(mouse_pos):
+            self.credits_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                #clickcode
+                pass
+
+        else:
+            self.credits_button.alternate_color = False
+
+
+        if self.exit_button.rect.collidepoint(mouse_pos):
+            self.exit_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                self.exit_game()
+
+        else:
+            self.exit_button.alternate_color = False
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
@@ -210,17 +232,27 @@ class GothicGame:
             if self.stats.in_lobby:
                 self.play_button.draw_button()
                 self.stats_button.draw_button()
+                self.credits_button.draw_button()
+                self.exit_button.draw_button()
             
             elif self.stats.in_stats:
 
-                self.total_items_text = Text(self, "Total items Collected:", (self.settings.screen_width//2 - 400, 400))
-                self.total_items_value = Text(self, str(self.stats.total_items_collected), (self.settings.screen_width//2 + 360, 400))
+                self.high_score_text = Text(self, "High Score:", (self.settings.screen_width//2 - 400, 400))
+                self.high_score_value = Text(self, str(self.stats.high_score), (self.settings.screen_width//2 + 360, 400))
+
+                self.total_items_text = Text(self, "Total items Collected:", (self.settings.screen_width//2 - 400, 475))
+                self.total_items_value = Text(self, str(self.stats.total_items_collected), (self.settings.screen_width//2 + 360, 475))
 
 
                 self.total_items_text.draw_text()
                 self.total_items_value.draw_text()
 
+                self.high_score_text.draw_text()
+                self.high_score_value.draw_text()
+
+
                 self.stats_back_button.draw_button()
+                self.stats_reset_button.draw_button()
 
         
         pygame.display.flip()
@@ -246,6 +278,8 @@ class GothicGame:
         self.scoreboard.prep_score()
         self.scoreboard.check_high_score()
 
+    def exit_game(self):
+        sys.exit()
 
     def run_game(self):
         """Start the main loop for the game"""
