@@ -25,6 +25,8 @@ class Button:
         else:
             self.rect.center = self.screen_rect.center
 
+        self.alternate_color = False
+
         self.prep_msg(self.msg, self.text_color)
 
     def prep_msg(self, msg, text_color):

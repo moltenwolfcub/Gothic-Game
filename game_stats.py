@@ -11,6 +11,8 @@ class GameStats:
 
         self.high_score = 0
 
+        self.total_items_collected = 0
+
     def reset_stats(self):
         """Initialize variable statistics"""
         self.score = 0

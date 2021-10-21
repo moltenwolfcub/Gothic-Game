@@ -26,6 +26,10 @@ class GothicGame:
         self.bg_image = pygame.image.load(self.bacground_filename)
         self.bg_image = pygame.transform.scale(self.bg_image, (self.settings.screen_width, self.settings.screen_height))
 
+        self.lobby_bacground_filename = "graphics/ui/background.jpg"
+        self.lobby_bg_image = pygame.image.load(self.lobby_bacground_filename)
+        self.lobby_bg_image = pygame.transform.scale(self.lobby_bg_image, (self.settings.screen_width, self.settings.screen_height))
+
         pygame.display.set_caption("Rat's Revenge")
 
         self.stats = GameStats(self)
@@ -67,6 +71,7 @@ class GothicGame:
         self.enemies.add(enemy)
 
         self.play_button = Button(self, "Play")
+        self.stats_button = Button(self, "Statistics",(self.settings.screen_width//2, self.settings.screen_height//2 + 75), (300, 75))
 
         self.mouse_down = False
 
@@ -154,9 +159,17 @@ class GothicGame:
 
 
                 pygame.mouse.set_visible(False)
-        
-        else:
+
+        if not self.play_button.rect.collidepoint(mouse_pos):
             self.play_button.alternate_color = False
+
+        if self.stats_button.rect.collidepoint(mouse_pos):
+            self.stats_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                pass
+
+        if not self.stats_button.rect.collidepoint(mouse_pos):
+            self.stats_button.alternate_color = False
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
@@ -171,7 +184,10 @@ class GothicGame:
         self.scoreboard.show_score()
 
         if not self.stats.game_active:
+            self.screen.blit(self.lobby_bg_image, (0, 0))
+
             self.play_button.draw_button()
+            self.stats_button.draw_button()
 
         
         pygame.display.flip()
@@ -191,6 +207,8 @@ class GothicGame:
 
     def increase_score(self):
         """Increase score"""
+        self.stats.total_items_collected += 1
+
         self.stats.score += self.settings.item_points
         self.scoreboard.prep_score()
         self.scoreboard.check_high_score()
