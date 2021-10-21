@@ -19,6 +19,7 @@ class GameStats:
     def reset_total_stats(self):
         """Reset the statistics stored cross game"""
         self.total_items_collected = 0
+        self.high_score = 0
 
     def reset_stats(self):
         """Initialize variable statistics"""

@@ -84,6 +84,9 @@ class GothicGame:
         self.stats_back_button = Button(self, "Back", (self.settings.screen_width//2-170 ,self.settings.screen_height-75), (200, 75))
         self.stats_reset_button = Button(self, "Reset Statistics", (self.settings.screen_width//2 + 170 ,self.settings.screen_height-75), (480, 75))
 
+        self.reset_confirm_button = Button(self, "Yes", (self.settings.screen_width//2 + 100 ,self.settings.screen_height//2 + 50))
+        self.reset_deny_button = Button(self, "No", (self.settings.screen_width//2 - 100 ,self.settings.screen_height//2 + 50))
+
         self.mouse_down = False
 
 
@@ -154,6 +157,8 @@ class GothicGame:
 
     def check_mouse(self):
         mouse_pos = pygame.mouse.get_pos()
+
+
         if self.play_button.rect.collidepoint(mouse_pos):
             self.play_button.alternate_color = True
             if self.mouse_down and not self.stats.game_active:
@@ -185,6 +190,16 @@ class GothicGame:
             self.stats_button.alternate_color = False
 
 
+        if self.stats_reset_button.rect.collidepoint(mouse_pos):
+            self.stats_reset_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                self.stats.in_stats = False
+                self.stats.in_stat_reset_check = True
+
+        else:
+            self.stats_reset_button.alternate_color = False
+
+
         if self.stats_back_button.rect.collidepoint(mouse_pos):
             self.stats_back_button.alternate_color = True
             if self.mouse_down and not self.stats.game_active:
@@ -212,6 +227,29 @@ class GothicGame:
 
         else:
             self.exit_button.alternate_color = False
+
+
+        if self.reset_confirm_button.rect.collidepoint(mouse_pos):
+            self.reset_confirm_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                self.stats.reset_total_stats()
+
+                self.stats.in_stat_reset_check = False
+                self.stats.in_stats = True
+
+        else:
+            self.reset_confirm_button.alternate_color = False
+
+
+        if self.reset_deny_button.rect.collidepoint(mouse_pos):
+            self.reset_deny_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active:
+                self.stats.in_stat_reset_check = False
+                self.stats.in_stats = True
+
+        else:
+            self.reset_deny_button.alternate_color = False
+
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
@@ -253,6 +291,14 @@ class GothicGame:
 
                 self.stats_back_button.draw_button()
                 self.stats_reset_button.draw_button()
+
+            elif self.stats.in_stat_reset_check:
+
+                self.reset_warining_text = Text(self, "Are you sure that you want to reset all of your statistics?", (self.settings.screen_width//2, 450), True)
+                self.reset_warining_text.draw_text()
+
+                self.reset_confirm_button.draw_button()
+                self.reset_deny_button.draw_button()
 
         
         pygame.display.flip()
