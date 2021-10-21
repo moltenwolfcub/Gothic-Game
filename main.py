@@ -139,7 +139,7 @@ class GothicGame:
     def check_mouse(self):
         mouse_pos = pygame.mouse.get_pos()
         if self.play_button.rect.collidepoint(mouse_pos):
-            self.play_button.button_color = (155, 0, 0)
+            self.play_button.alternate_color = True
             if self.mouse_down and not self.stats.game_active:
                 self.settings.initialize_dynamic_settings()
                 self.stats.reset_stats()
@@ -156,7 +156,7 @@ class GothicGame:
                 pygame.mouse.set_visible(False)
         
         else:
-            self.play_button.button_color = self.settings.button_color
+            self.play_button.alternate_color = False
 
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""

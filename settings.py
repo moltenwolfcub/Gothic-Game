@@ -19,7 +19,7 @@ class Settings:
         self.enemy_size = 100
 
         #button settings
-        self.button_color = (255, 0, 0)
+        self.button_alternate_text_color =  (0, 125, 0)
         self.button_text_color = (255, 255, 255)
 
         self.speedup_scale = 1.1
