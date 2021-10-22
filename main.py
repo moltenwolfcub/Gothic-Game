@@ -20,21 +20,8 @@ class GothicGame:
 
         self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height),pygame.FULLSCREEN)#,pygame.RESIZABLE)
-        self.settings.screen_width = self.screen.get_rect().width
-        self.settings.screen_height = self.screen.get_rect().height
-
-        self.bacground_filename = "graphics/background.png"
-        self.bg_image = pygame.image.load(self.bacground_filename)
-        self.bg_image = pygame.transform.scale(self.bg_image, (self.settings.screen_width, self.settings.screen_height))
-
-        self.lobby_bacground_filename = "graphics/ui/background.jpg"
-        self.lobby_bg_image = pygame.image.load(self.lobby_bacground_filename)
-        self.lobby_bg_image = pygame.transform.scale(self.lobby_bg_image, (self.settings.screen_width, self.settings.screen_height))
-
-        self.logo_filename = "graphics/ui/logo.png"
-        self.logo_image = pygame.image.load(self.logo_filename)
-        self.logo_image = pygame.transform.scale(self.logo_image, (500,500))
+        self.import_images()
+        self.make_buttons()
 
         pygame.display.set_caption("Rat's Revenge")
 
@@ -43,8 +30,12 @@ class GothicGame:
 
         self.player = Player(self)
         self.item = Item(self)
-        self.maze_elements = pygame.sprite.Group()
 
+        self.enemies = pygame.sprite.Group()
+        enemy = Enemy(self)
+        self.enemies.add(enemy)
+
+        self.maze_elements = pygame.sprite.Group()
         self.maze_line_shapes = [
             (110, 110, 500, 10),
             (110, 110, 10, 400),
@@ -68,18 +59,36 @@ class GothicGame:
             (1230, 110, 10, 365),
             (1370, 230, 700, 10)
         ]
-
         self.create_maze()
 
-        self.enemies = pygame.sprite.Group()
 
-        enemy = Enemy(self)
-        self.enemies.add(enemy)
+        self.mouse_down = False
+
+    def import_images(self):
+
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height),pygame.FULLSCREEN)#,pygame.RESIZABLE)
+        self.settings.screen_width = self.screen.get_rect().width
+        self.settings.screen_height = self.screen.get_rect().height
+
+        self.bacground_filename = "graphics/background.png"
+        self.bg_image = pygame.image.load(self.bacground_filename)
+        self.bg_image = pygame.transform.scale(self.bg_image, (self.settings.screen_width, self.settings.screen_height))
+
+        self.lobby_bacground_filename = "graphics/ui/background.jpg"
+        self.lobby_bg_image = pygame.image.load(self.lobby_bacground_filename)
+        self.lobby_bg_image = pygame.transform.scale(self.lobby_bg_image, (self.settings.screen_width, self.settings.screen_height))
+
+        self.logo_filename = "graphics/ui/logo.png"
+        self.logo_image = pygame.image.load(self.logo_filename)
+        self.logo_image = pygame.transform.scale(self.logo_image, (500,500))
+
+    def make_buttons(self):
 
         self.play_button = Button(self, "Play", (self.settings.screen_width//2, self.settings.screen_height//2 - 100))
         self.stats_button = Button(self, "Statistics",(self.settings.screen_width//2, self.settings.screen_height//2 - 25), (300, 75))
         self.credits_button = Button(self, "Credits", (self.settings.screen_width//2, self.settings.screen_height//2 + 50), (250, 75))
         self.exit_button = Button(self, "Exit", (self.settings.screen_width//2, self.settings.screen_height//2 + 125))
+        self.troll_button = Button(self, "Click Here", (self.settings.screen_width- 200,self.settings.screen_height-75), (330, 75))
 
         self.stats_back_button = Button(self, "Back", (self.settings.screen_width//2-170 ,self.settings.screen_height-75), (200, 75))
         self.stats_reset_button = Button(self, "Reset Statistics", (self.settings.screen_width//2 + 170 ,self.settings.screen_height-75), (480, 75))
@@ -88,9 +97,6 @@ class GothicGame:
         self.reset_deny_button = Button(self, "No", (self.settings.screen_width//2 - 100 ,self.settings.screen_height//2 + 50))
 
         self.credits_back_button = Button(self, "Back", (self.settings.screen_width//2, self.settings.screen_height-100), (200, 75))
-
-        self.mouse_down = False
-
 
     def create_maze(self):
         """Draw the maze rects"""
@@ -223,6 +229,15 @@ class GothicGame:
             self.exit_button.alternate_color = False
 
 
+        if self.troll_button.rect.collidepoint(mouse_pos):
+            self.troll_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active and self.stats.in_lobby:
+                pass
+
+        else:
+            self.troll_button.alternate_color = False
+
+
 
 
         if self.stats_reset_button.rect.collidepoint(mouse_pos):
@@ -302,6 +317,7 @@ class GothicGame:
                 self.stats_button.draw_button()
                 self.credits_button.draw_button()
                 self.exit_button.draw_button()
+                self.troll_button.draw_button()
             
             elif self.stats.in_stats:
 
