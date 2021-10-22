@@ -87,6 +87,8 @@ class GothicGame:
         self.reset_confirm_button = Button(self, "Yes", (self.settings.screen_width//2 + 100 ,self.settings.screen_height//2 + 50))
         self.reset_deny_button = Button(self, "No", (self.settings.screen_width//2 - 100 ,self.settings.screen_height//2 + 50))
 
+        self.credits_back_button = Button(self, "Back", (self.settings.screen_width//2, self.settings.screen_height-100), (200, 75))
+
         self.mouse_down = False
 
 
@@ -173,7 +175,7 @@ class GothicGame:
 
         if self.play_button.rect.collidepoint(mouse_pos):
             self.play_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_lobby:
                 self.settings.initialize_dynamic_settings()
                 self.stats.reset_stats()
                 self.stats.game_active = True
@@ -194,9 +196,8 @@ class GothicGame:
 
         if self.credits_button.rect.collidepoint(mouse_pos):
             self.credits_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_lobby:
                 self.stats.in_lobby = False
-                self.stats.in_stats = False
                 self.stats.in_credits = True
 
         else:
@@ -205,7 +206,7 @@ class GothicGame:
     
         if self.stats_button.rect.collidepoint(mouse_pos):
             self.stats_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_lobby:
                 self.stats.in_lobby = False
                 self.stats.in_stats = True
 
@@ -213,9 +214,20 @@ class GothicGame:
             self.stats_button.alternate_color = False
 
 
+        if self.exit_button.rect.collidepoint(mouse_pos):
+            self.exit_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active and self.stats.in_lobby:
+                self.exit_game()
+
+        else:
+            self.exit_button.alternate_color = False
+
+
+
+
         if self.stats_reset_button.rect.collidepoint(mouse_pos):
             self.stats_reset_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_stats:
                 self.stats.in_stats = False
                 self.stats.in_stat_reset_check = True
 
@@ -225,26 +237,18 @@ class GothicGame:
 
         if self.stats_back_button.rect.collidepoint(mouse_pos):
             self.stats_back_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_stats:
                 self.stats.in_stats = False
                 self.stats.in_lobby = True
 
         else:
             self.stats_back_button.alternate_color = False
-        
 
-        if self.exit_button.rect.collidepoint(mouse_pos):
-            self.exit_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
-                self.exit_game()
-
-        else:
-            self.exit_button.alternate_color = False
 
 
         if self.reset_confirm_button.rect.collidepoint(mouse_pos):
             self.reset_confirm_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_stat_reset_check:
                 self.stats.reset_total_stats()
 
                 self.stats.in_stat_reset_check = False
@@ -256,24 +260,38 @@ class GothicGame:
 
         if self.reset_deny_button.rect.collidepoint(mouse_pos):
             self.reset_deny_button.alternate_color = True
-            if self.mouse_down and not self.stats.game_active:
+            if self.mouse_down and not self.stats.game_active and self.stats.in_stat_reset_check:
                 self.stats.in_stat_reset_check = False
                 self.stats.in_stats = True
 
         else:
             self.reset_deny_button.alternate_color = False
 
+        
+
+        if self.credits_back_button.rect.collidepoint(mouse_pos):
+            self.credits_back_button.alternate_color = True
+            if self.mouse_down and not self.stats.game_active and self.stats.in_credits:
+                self.stats.in_credits = False
+                self.stats.in_lobby = True
+
+        else:
+            self.reset_deny_button.alternate_color = False
+            pass
+
     def _update_screen(self):
         """Update the images on the screen and flip to a new screen."""
 
-        self.screen.blit(self.bg_image, (0, 0))
-        self.item.blitme()
+        if self.stats.game_active:
 
-        self.maze_elements.draw(self.screen)
-        self.enemies.draw(self.screen)
-        self.player.blitme()
+            self.screen.blit(self.bg_image, (0, 0))
+            self.item.blitme()
 
-        self.scoreboard.show_score()
+            self.maze_elements.draw(self.screen)
+            self.enemies.draw(self.screen)
+            self.player.blitme()
+
+            self.scoreboard.show_score()
 
         if not self.stats.game_active:
             self.screen.blit(self.lobby_bg_image, (0, 0))
@@ -314,9 +332,15 @@ class GothicGame:
             
             elif self.stats.in_credits:
 
-                self.proggrammer_credt_text = Text(self, "Lead Programmer: Oliver", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 50), True)
-                self.artist_credt_text = Text(self, "Lead Artist: Livvy", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 25), True)
-                self.music_credt_text = Text(self, "Lead Sound Artist: Bernard", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 0), True)
+                self.proggrammer_credt_text = Text(self, "Lead Programmer: Oliver", (self.settings.screen_width//2 ,self.settings.screen_height//2 - 100), True)
+                self.artist_credt_text = Text(self, "Lead Artist: Livvy", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 0), True)
+                self.music_credt_text = Text(self, "Lead Sound Artist: Bernard", (self.settings.screen_width//2 ,self.settings.screen_height//2 + 100), True)
+
+                self.proggrammer_credt_text.draw_text()
+                self.artist_credt_text.draw_text()
+                self.music_credt_text.draw_text()
+
+                self.credits_back_button.draw_button()
 
         
         pygame.display.flip()
