@@ -34,7 +34,7 @@ class Button:
         self.msg_image = self.font.render(msg, True, text_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
-        self.msg_image_rect.y += 5
+        self.msg_image_rect.y += self.height // 15
     
     def draw_button(self):
         self.screen.blit(self.image, self.rect)
